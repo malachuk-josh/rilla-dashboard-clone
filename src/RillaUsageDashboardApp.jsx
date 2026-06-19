@@ -920,7 +920,7 @@ export default function RillaUsageDashboardApp() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <KpiCard icon={ClipboardCheck} label="Period Recordings" value={fmtInt(selectedStats.conversations)} sublabel={periodLabel} />
           <KpiCard icon={Users} label="Active Reps" value={fmtInt(selectedStats.activeRepCount)} sublabel="With calls in period" />
           <KpiCard icon={MessageSquare} label="Script Compliance" value={fmtPct(selectedStats.avgScriptCompliance)} sublabel={`Goal ${fmtPct(goals.scriptCompliance)}`} status={metricStatus(selectedStats.avgScriptCompliance, goals.scriptCompliance)} />
