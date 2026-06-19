@@ -5,7 +5,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed", "#0891b2", "#ea580c", "#64748b"];
 const DEFAULT_GOALS = { recordingCompliance: 0.8, scriptCompliance: 0.8, talkRatioMax: 0.6, minimumViewsRatio: 0.35 };
-const DEMO_WORKBOOK_NAME = "Rilla-Usage-01-01-to-06-12.xlsx";
+const DEMO_WORKBOOK_NAME = "Rilla-Usage-01-01-to-06-19.xlsx";
 const DEMO_WORKBOOK_URL = `/${DEMO_WORKBOOK_NAME}`;
 const SHEET_ALIASES = {
   userManagement: ["user_management", "user management", "users"],
