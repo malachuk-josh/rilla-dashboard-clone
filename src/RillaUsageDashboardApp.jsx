@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import * as XLSX from "xlsx";
-import { Upload, BarChart3, Users, Target, MessageSquare, Eye, Timer, Search, AlertTriangle, Settings, ClipboardCheck, TrendingUp, CalendarDays, Moon, Sun, Info, X } from "lucide-react";
+import { Upload, BarChart3, Users, Target, MessageSquare, Eye, Timer, Search, AlertTriangle, Settings, ClipboardCheck, TrendingUp, CalendarDays, Moon, Sun, Info, X, ChevronDown } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 
 const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed", "#0891b2", "#ea580c", "#64748b"];
@@ -343,6 +343,7 @@ export default function RillaUsageDashboardApp() {
   const [search, setSearch] = useState("");
   const [goals, setGoals] = useState(DEFAULT_GOALS);
   const [trendLines, setTrendLines] = useState({ conversations: true, scriptCompliance: true, talkRatio: true });
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(false);
   const [infoTab, setInfoTab] = useState("kpis");
@@ -903,23 +904,28 @@ export default function RillaUsageDashboardApp() {
         <header className="z-30 rounded-3xl border border-slate-800 bg-slate-950/90 p-4 shadow-2xl shadow-black/30 backdrop-blur lg:sticky lg:top-3">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-3"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white"><BarChart3 className="h-6 w-6" /></div><div><h1 className="text-2xl font-bold tracking-tight text-white">Rilla Usage Analytics</h1><p className="text-sm text-slate-400">{fileName || "Raw Rilla workbook"} · Export dates {shortDate(t.dateStart)} – {shortDate(t.dateEnd)} · View: {periodLabel}</p></div></div>
-            <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 xl:w-auto xl:grid-cols-none xl:flex xl:flex-wrap xl:justify-end">
-              <a href="https://app.rillavoice.com/settings/export" target="_blank" rel="noreferrer" className={actionButtonClass}>Data Source</a>
-              <label className={cx(actionButtonClass, "cursor-pointer")}><Upload className="h-4 w-4" />Upload New File<input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleFile} /></label>
-              <button onClick={() => setShowInfoPanel((prev) => !prev)} className={cx(actionButtonClass, showInfoPanel ? "border-blue-500/60 bg-blue-500/15 text-blue-100" : "")}><Info className="h-4 w-4" /> KPI Info</button>
-              <button onClick={() => setIsDark((prev) => !prev)} className={actionButtonClass}>{isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{isDark ? "Light" : "Dark"} Mode</button>
+            <div className="flex items-center gap-2">
+              <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 xl:w-auto xl:grid-cols-none xl:flex xl:flex-wrap xl:justify-end">
+                <a href="https://app.rillavoice.com/settings/export" target="_blank" rel="noreferrer" className={actionButtonClass}>Data Source</a>
+                <label className={cx(actionButtonClass, "cursor-pointer")}><Upload className="h-4 w-4" />Upload New File<input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleFile} /></label>
+                <button onClick={() => setShowInfoPanel((prev) => !prev)} className={cx(actionButtonClass, showInfoPanel ? "border-blue-500/60 bg-blue-500/15 text-blue-100" : "")}><Info className="h-4 w-4" /> KPI Info</button>
+                <button onClick={() => setIsDark((prev) => !prev)} className={actionButtonClass}>{isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{isDark ? "Light" : "Dark"} Mode</button>
+              </div>
+              <button onClick={() => setHeaderCollapsed((prev) => !prev)} className={cx(actionButtonClass, "shrink-0")} title={headerCollapsed ? "Expand filters" : "Collapse filters"}><ChevronDown className={cx("h-4 w-4 transition-transform duration-200", headerCollapsed ? "rotate-180" : "")} /></button>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
-            <select value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500">{model.teamOptions.map((team) => <option key={team}>{team}</option>)}</select>
-            <select value={selectedRep} onChange={(e) => setSelectedRep(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500">{model.repOptions.map((rep) => <option key={rep}>{rep}</option>)}</select>
-            <select value={granularity} onChange={(e) => setGranularity(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500"><option value="day">Daily Trend</option><option value="week">Weekly Trend</option><option value="month">Monthly Trend</option></select>
-            <div className="relative xl:col-span-2"><Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-500" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search reps, teams, emails..." className="w-full rounded-2xl border border-slate-700 bg-slate-900 py-2 pl-9 pr-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500" /></div>
-          </div>
-          <div className="mt-3 grid gap-3 xl:grid-cols-[1fr_370px]">
-            <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2">{timeFrameOptions.map((option) => <button key={option.value} onClick={() => { setDateMode(option.value); setCustomStart(""); setCustomEnd(""); }} className={cx("rounded-xl px-3 py-2 text-xs font-semibold transition", dateMode === option.value ? "bg-blue-600 text-white" : "bg-slate-950 text-slate-300 hover:bg-slate-800")}>{option.label}</button>)}<button onClick={() => setDateMode("custom")} className={cx("rounded-xl px-3 py-2 text-xs font-semibold transition", dateMode === "custom" ? "bg-blue-600 text-white" : "bg-slate-950 text-slate-300 hover:bg-slate-800")}>Custom</button></div>
-            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2"><label className="flex items-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs text-slate-400"><CalendarDays className="h-4 w-4" /><input type="date" value={displayedStartValue} min={isoDate(t.dateStart)} max={isoDate(t.dateEnd)} onChange={(e) => { setDateMode("custom"); setCustomStart(e.target.value); }} className="w-full bg-transparent text-sm text-white outline-none" /></label><label className="flex items-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs text-slate-400"><CalendarDays className="h-4 w-4" /><input type="date" value={displayedEndValue} min={isoDate(t.dateStart)} max={isoDate(t.dateEnd)} onChange={(e) => { setDateMode("custom"); setCustomEnd(e.target.value); }} className="w-full bg-transparent text-sm text-white outline-none" /></label></div>
-          </div>
+          {!headerCollapsed && <>
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-5">
+              <select value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500">{model.teamOptions.map((team) => <option key={team}>{team}</option>)}</select>
+              <select value={selectedRep} onChange={(e) => setSelectedRep(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500">{model.repOptions.map((rep) => <option key={rep}>{rep}</option>)}</select>
+              <select value={granularity} onChange={(e) => setGranularity(e.target.value)} className="rounded-2xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-blue-500"><option value="day">Daily Trend</option><option value="week">Weekly Trend</option><option value="month">Monthly Trend</option></select>
+              <div className="relative xl:col-span-2"><Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-500" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search reps, teams, emails..." className="w-full rounded-2xl border border-slate-700 bg-slate-900 py-2 pl-9 pr-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-blue-500" /></div>
+            </div>
+            <div className="mt-3 grid gap-3 xl:grid-cols-[1fr_370px]">
+              <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2">{timeFrameOptions.map((option) => <button key={option.value} onClick={() => { setDateMode(option.value); setCustomStart(""); setCustomEnd(""); }} className={cx("rounded-xl px-3 py-2 text-xs font-semibold transition", dateMode === option.value ? "bg-blue-600 text-white" : "bg-slate-950 text-slate-300 hover:bg-slate-800")}>{option.label}</button>)}<button onClick={() => setDateMode("custom")} className={cx("rounded-xl px-3 py-2 text-xs font-semibold transition", dateMode === "custom" ? "bg-blue-600 text-white" : "bg-slate-950 text-slate-300 hover:bg-slate-800")}>Custom</button></div>
+              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-800 bg-slate-900/70 p-2"><label className="flex items-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs text-slate-400"><CalendarDays className="h-4 w-4" /><input type="date" value={displayedStartValue} min={isoDate(t.dateStart)} max={isoDate(t.dateEnd)} onChange={(e) => { setDateMode("custom"); setCustomStart(e.target.value); }} className="w-full bg-transparent text-sm text-white outline-none" /></label><label className="flex items-center gap-2 rounded-xl bg-slate-950 px-3 py-2 text-xs text-slate-400"><CalendarDays className="h-4 w-4" /><input type="date" value={displayedEndValue} min={isoDate(t.dateStart)} max={isoDate(t.dateEnd)} onChange={(e) => { setDateMode("custom"); setCustomEnd(e.target.value); }} className="w-full bg-transparent text-sm text-white outline-none" /></label></div>
+            </div>
+          </>}
         </header>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
