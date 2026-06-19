@@ -339,7 +339,7 @@ export default function RillaUsageDashboardApp() {
   const [dateMode, setDateMode] = useState("all");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
-  const [granularity, setGranularity] = useState("week");
+  const [granularity, setGranularity] = useState("day");
   const [search, setSearch] = useState("");
   const [goals, setGoals] = useState(DEFAULT_GOALS);
   const [isDark, setIsDark] = useState(false);
