@@ -345,7 +345,7 @@ export default function RillaUsageDashboardApp() {
   const [goals, setGoals] = useState(DEFAULT_GOALS);
   const [teamVolumeGoals] = useState(DEFAULT_TEAM_VOLUME_GOALS);
   const [trendLines, setTrendLines] = useState({ conversations: true, scriptCompliance: true, talkRatio: true });
-  const [headerCollapsed, setHeaderCollapsed] = useState(false);
+  const [headerCollapsed, setHeaderCollapsed] = useState(true);
   const [isDark, setIsDark] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(false);
   const [infoTab, setInfoTab] = useState("kpis");
@@ -916,7 +916,7 @@ export default function RillaUsageDashboardApp() {
               <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 xl:w-auto xl:grid-cols-none xl:flex xl:flex-wrap xl:justify-end">
                 <a href="https://app.rillavoice.com/settings/export" target="_blank" rel="noreferrer" className={actionButtonClass}>Data Source</a>
                 <label className={cx(actionButtonClass, "cursor-pointer")}><Upload className="h-4 w-4" />Upload New File<input type="file" accept=".xlsx,.xls" className="hidden" onChange={handleFile} /></label>
-                <button onClick={() => setShowInfoPanel((prev) => !prev)} className={cx(actionButtonClass, showInfoPanel ? "border-blue-500/60 bg-blue-500/15 text-blue-100" : "")}><Info className="h-4 w-4" /> KPI Info</button>
+
                 <button onClick={() => setIsDark((prev) => !prev)} className={actionButtonClass}>{isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{isDark ? "Light" : "Dark"} Mode</button>
               </div>
               <button onClick={() => setHeaderCollapsed((prev) => !prev)} className={cx(actionButtonClass, "shrink-0")} title={headerCollapsed ? "Expand filters" : "Collapse filters"}><ChevronDown className={cx("h-4 w-4 transition-transform duration-200", headerCollapsed ? "" : "rotate-180")} /></button>
