@@ -911,7 +911,7 @@ export default function RillaUsageDashboardApp() {
                 <button onClick={() => setShowInfoPanel((prev) => !prev)} className={cx(actionButtonClass, showInfoPanel ? "border-blue-500/60 bg-blue-500/15 text-blue-100" : "")}><Info className="h-4 w-4" /> KPI Info</button>
                 <button onClick={() => setIsDark((prev) => !prev)} className={actionButtonClass}>{isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}{isDark ? "Light" : "Dark"} Mode</button>
               </div>
-              <button onClick={() => setHeaderCollapsed((prev) => !prev)} className={cx(actionButtonClass, "shrink-0")} title={headerCollapsed ? "Expand filters" : "Collapse filters"}><ChevronDown className={cx("h-4 w-4 transition-transform duration-200", headerCollapsed ? "rotate-180" : "")} /></button>
+              <button onClick={() => setHeaderCollapsed((prev) => !prev)} className={cx(actionButtonClass, "shrink-0")} title={headerCollapsed ? "Expand filters" : "Collapse filters"}><ChevronDown className={cx("h-4 w-4 transition-transform duration-200", headerCollapsed ? "" : "rotate-180")} /></button>
             </div>
           </div>
           {!headerCollapsed && <>
