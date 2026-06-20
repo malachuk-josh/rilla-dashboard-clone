@@ -5,6 +5,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#dc2626", "#7c3aed", "#0891b2", "#ea580c", "#64748b"];
 const DEFAULT_GOALS = { recordingCompliance: 0.8, scriptCompliance: 0.8, talkRatioMax: 0.6, minimumViewsRatio: 0.35 };
+const DEFAULT_TEAM_VOLUME_GOALS = { WMASS: 12000000, EMASS: 12000000, Albany: 8000000, CT: 8000000, Exteriors: 2000000 };
 const DEMO_WORKBOOK_NAME = "Rilla-Usage-01-01-to-06-19.xlsx";
 const DEMO_WORKBOOK_URL = `/${DEMO_WORKBOOK_NAME}`;
 const SHEET_ALIASES = {
@@ -342,6 +343,7 @@ export default function RillaUsageDashboardApp() {
   const [granularity, setGranularity] = useState("day");
   const [search, setSearch] = useState("");
   const [goals, setGoals] = useState(DEFAULT_GOALS);
+  const [teamVolumeGoals] = useState(DEFAULT_TEAM_VOLUME_GOALS);
   const [trendLines, setTrendLines] = useState({ conversations: true, scriptCompliance: true, talkRatio: true });
   const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [isDark, setIsDark] = useState(false);
@@ -798,6 +800,12 @@ export default function RillaUsageDashboardApp() {
     { key: "usersWhoRecorded", label: "Active Reps", render: (r) => fmtInt(r.usersWhoRecorded) },
     { key: "conversationsRecorded", label: "Conversations", render: (r) => fmtInt(r.conversationsRecorded) },
     { key: "soldCount", label: "Sold Count", render: (r) => fmtInt(r.soldCount) },
+    { key: "totalSold", label: "Net Volume", render: (r) => {
+      const goal = teamVolumeGoals[r.name];
+      const pct = goal ? r.totalSold / goal : null;
+      const color = pct === null ? "text-slate-300" : pct >= 1 ? "text-emerald-300" : pct >= 0.75 ? "text-amber-300" : "text-red-300";
+      return <span className={color}>{fmtMoney(r.totalSold)}{goal ? <span className="ml-1 text-xs text-slate-500">/ {fmtMoney(goal)}</span> : null}</span>;
+    }},
     { key: "scriptCompliance", label: "Script", render: (r) => fmtPct(r.scriptCompliance) },
     { key: "talkRatio", label: "Talk Ratio", render: (r) => fmtPct(r.talkRatio) },
     { key: "avgDuration", label: "Avg Duration", render: (r) => fmtDuration(r.avgDuration) },
